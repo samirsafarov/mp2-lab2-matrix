@@ -2,206 +2,210 @@
 
 #include <gtest.h>
 
-TEST(TMatrix, can_create_matrix_with_positive_length) /*
-можно создать матрицу с положительной длиной*/
-
+TEST(TMatrix, can_create_matrix_with_positive_length)
 {
-	ASSERT_NO_THROW(TMatrix<int> m(5)); /*
-не утверждать не бросок*/
+  ASSERT_NO_THROW(TMatrix<int> m(5));
 }
 
-TEST(TMatrix, cant_create_too_large_matrix) /*
-не могу создать для большой матрицы*/
+TEST(TMatrix, cant_create_too_large_matrix)
 {
-	ASSERT_ANY_THROW(TMatrix<int> m(MAX_MATRIX_SIZE + 1)); /*утверждать любой бросок*/
+  ASSERT_ANY_THROW(TMatrix<int> m(MAX_MATRIX_SIZE + 1));
 }
 
-TEST(TMatrix, throws_when_create_matrix_with_negative_length) /*
-броски, когда создать матрицу с отрицательной длиной*/
+TEST(TMatrix, throws_when_create_matrix_with_negative_length)
 {
-	ASSERT_ANY_THROW(TMatrix<int> m(-5));     /*утверждать любой бросок*/
+  ASSERT_ANY_THROW(TMatrix<int> m(-5));
 }
 
-TEST(TMatrix, can_create_copied_matrix) /*можно создать матрицу Скопировано*/
+TEST(TMatrix, can_create_copied_matrix)
 {
   TMatrix<int> m(5);
 
-  ASSERT_NO_THROW(TMatrix<int> m1(m)); /*не утверждать не бросок*/
+  ASSERT_NO_THROW(TMatrix<int> m1(m));
 }
 
-TEST(TMatrix, copied_matrix_is_equal_to_source_one) /*скопированы матрицы равен источника одного*/
+TEST(TMatrix, copied_matrix_is_equal_to_source_one)
 {
-	TMatrix <int> m1(2);
-	for (int i=0;i<2;i++)
-		for (int j=0;j<2-i;j++)
-			m1[i][j]=1;
-	TMatrix <int> m2(m1);
-	for (int i=0;i<2;i++)
-		for (int j=0;j<2-i;j++)
-			EXPECT_EQ(1, m2[i][j]); /*ожидать*/
+  TMatrix<int> a(3);
+	a[0][0] = 1;
+	a[0][1] = 2;
+	a[1][1] = 4;
+	TMatrix<int> a1(a);
+	EXPECT_EQ(a, a1);
 }
 
-TEST(TMatrix, copied_matrix_has_its_own_memory) /*копироваться матрица имеет свою собственную память*/
+TEST(TMatrix, copied_matrix_has_its_own_memory)
 {
-	TMatrix <int> m1(2);
-	TMatrix <int> m2(m1);
-	EXPECT_NE(&m2,&m1);
+  TMatrix<int> a(2);
+	a[1][1] = 1;
+
+	TMatrix<int> a1(a);
+
+	EXPECT_NE(&a, &a1);
 }
 
-TEST(TMatrix, can_get_size) /*может получить размер*/
+TEST(TMatrix, can_get_size)
 {
-	TMatrix <int> m(4);
-	EXPECT_EQ(4, m.GetSize());
+  TMatrix<int> a(10);
+  EXPECT_EQ(10, a.GetSize() );
+
 }
 
-TEST(TMatrix, can_set_and_get_element) /*можно установить и получить элемент*/
-{
-	TMatrix <int> m(4);
-	m[0][0] = 4;
-	EXPECT_EQ(4, m[0][0]);
+TEST(TMatrix, can_set_and_get_element)
+{  TMatrix<int> a(10);
+a[1][1]=77;
+EXPECT_EQ(77, a[1][1]);
+  
 }
 
-TEST(TMatrix, throws_when_set_element_with_negative_index) /*бросает, когда устанавливается элемент с отрицательным индексом*/
-{
-	TMatrix <int> m(2);
-	ASSERT_ANY_THROW(m[-1][0]=1); /*утверждать любой бросок*/	
+TEST(TMatrix, throws_when_set_element_with_negative_index)
+{  TMatrix<int> a(10);
+ASSERT_ANY_THROW(a[-1][-1]=0);
+  
 }
 
-TEST(TMatrix, throws_when_set_element_with_too_large_index) /*бросает, когда устанавливается элемент со слишком большой индекс*/
+TEST(TMatrix, throws_when_set_element_with_too_large_index)
 {
-	TMatrix<int> m(2);
-	ASSERT_ANY_THROW(m[3][0]=1); /*утверждать любой бросок*/
-} 
-
-TEST(TMatrix, can_assign_matrix_to_itself) /*может назначить себе матрицу
-*/
-{
-	TMatrix<int> m(2);
-	for (int i=0;i<2;i++)
-		for (int j=0;j<2-i;j++)
-			m[i][j]=1;
-	m=m;
-	for (int i=0;i<2;i++)
-		for (int j=0;j<2-i;j++)
-			EXPECT_EQ(1,m[i][j]);
+ TMatrix<int> a(10);
+ASSERT_ANY_THROW(a[MAX_VECTOR_SIZE+1][1] = 0); 
+  
 }
 
-TEST(TMatrix, can_assign_matrices_of_equal_size) /*может назначить матриц одинакового размера
-*/
+TEST(TMatrix, can_assign_matrix_to_itself)
 {
-	TMatrix<int> m1(2);
-	for (int i=0;i<2;i++)
-		for (int j=0;j<2-i;j++)
-			m1[i][j]=i;
-	TMatrix<int> m2(2);
-	for (int i=0;i<2;i++)
-		for (int j=0;j<2-i;j++)
-			m2[i][j]=i+1;
-	m1=m2;
-	EXPECT_EQ(1,m1[0][0]);
-	EXPECT_EQ(1,m1[0][1]);
-	EXPECT_EQ(2,m1[1][0]);
+  TMatrix<int> a(3);
+  a[0][0] = 3;
+  a[1][1] = 4;
+  a = a;
+  EXPECT_EQ(3, a[0][0]);
+  EXPECT_EQ(4, a[1][1]);
 }
 
-TEST(TMatrix, assign_operator_change_matrix_size) /*назначить оператора размер матрицы изменения*/
+TEST(TMatrix, can_assign_matrices_of_equal_size)
 {
+  
+	TMatrix<int> a(3), b(3);
+	for (int i = 0; i < 3; i++) {
+		a[i][i] = i;
+	}
+	b = a;
+
+	EXPECT_EQ(0, b[0][0]);
+	EXPECT_EQ(1, b[1][1]);
+	EXPECT_EQ(2, b[2][2]);
+}
+
+TEST(TMatrix, assign_operator_change_matrix_size)
+{
+ TMatrix<int> a(3);
+	a = TMatrix<int>(4);
+
+	EXPECT_EQ(4, a.GetSize() );
+}
+
+TEST(TMatrix, can_assign_matrices_of_different_size)
+{
+ TMatrix<int> a(3), b(2);
+	b = a;
+
+	EXPECT_EQ(3, b.GetSize() );
+}
+
+TEST(TMatrix, compare_equal_matrices_return_true)
+{
+  TMatrix<int> a(2);
+	a[0][0] = 1;
+	a[0][1] = 2;
+	a[1][1] = 3;
+
+	TMatrix<int> b(2);
+	b[0][0] = 1;
+	b[0][1] = 2;
+	b[1][1] = 3;
+
+	EXPECT_TRUE(a == b);
+}
+
+TEST(TMatrix, compare_matrix_with_itself_return_true)
+{
+  TMatrix<int> a(3);
+	EXPECT_TRUE(a == a);
+}
+
+TEST(TMatrix, matrices_with_different_size_are_not_equal)
+{
+  TMatrix<int> a(3), b(2);
+	EXPECT_FALSE(b == a);
+}
+
+TEST(TMatrix, can_add_matrices_with_equal_size)
+{
+ 
+	TMatrix<int> a(2);
+	a[0][0] = 1;
+	a[0][1] = 2;
+
+	TMatrix<int> b(2);
+	b[0][0] = 2;
+	b[0][1] = 3;
+
+	TMatrix<int> c(2);
+	c[0][0] = 3;
+	c[0][1] = 5;
+
+	EXPECT_EQ(c, a+b);
+}
+
+TEST(TMatrix, cant_add_matrices_with_not_equal_size)
+{
+ TMatrix<int> m(2);
+
 	TMatrix<int> m1(3);
-	TMatrix<int> m2(2);
-	m1=m2;
-	EXPECT_EQ(2,m1.GetSize());
+
+	ASSERT_ANY_THROW(m1+m);
 }
 
-TEST(TMatrix, can_assign_matrices_of_different_size) /*может назначить матриц различного размера*/
+TEST(TMatrix, can_subtract_matrices_with_equal_size)
 {
-	TMatrix<int> m1(3);
-	for (int i=0;i<3;i++)
-		for (int j=0;j<3-i;j++)
-			m1[i][j]=i;
-	TMatrix<int> m2(2);
-	for (int i=0;i<2;i++)
-		for (int j=0;j<2-i;j++)
-			m2[i][j]=i;
-	m1=m2;
-	EXPECT_EQ(0,m1[0][0]);
-	EXPECT_EQ(0,m1[0][1]);
-	EXPECT_EQ(1,m1[1][0]);
+ TMatrix<int> a(2);
+	a[0][0] = 1;
+	a[0][1] = 2;
+
+	TMatrix<int> b(2);
+	b[0][0] = 2;
+	b[0][1] = 3;
+
+	TMatrix<int> c(2);
+	c[0][0] = -1;
+	c[0][1] = -1;
+
+	EXPECT_EQ(c, a-b);
 }
 
-TEST(TMatrix, compare_equal_matrices_return_true) /*compare_equal_matrices_return_true*/
+TEST(TMatrix, cant_subtract_matrixes_with_not_equal_size)
 {
-	TMatrix<int> m1(3);
-	for (int i=0;i<3;i++)
-		for (int j=0;j<3-i;j++)
-			m1[i][j]=i;
-	TMatrix<int> m2(3);
-	for (int i=0;i<3;i++)
-		for (int j=0;j<3-i;j++)
-			m2[i][j]=i;
-	EXPECT_TRUE(m1==m2);
+  TMatrix<int> a(2);
+
+	TMatrix<int> b(3);
+
+	ASSERT_ANY_THROW(b-a);
 }
 
-TEST(TMatrix, compare_matrix_with_itself_return_true) /*сравнить матрицу с собой вернуться правда*/
+/*TEST(TMatrix, umnozhenie)
 {
-	TMatrix<int> m1(3);
-	for (int i=0;i<3;i++)
-		for (int j=0;j<3-i;j++)
-			m1[i][j]=i;
-	EXPECT_TRUE(m1==m1);
-}
+  TMatrix<int> a(2);
+   TMatrix<int> b(2);
+    TMatrix<int> c(2);
+   a[0][0]= 2;
+   a[0][1]= 3;
+   a[1][1]= 1;
+   
+   b[0][0]= 1;
+   b[0][1]= 0;
+   b[1][1]= 3;
 
-TEST(TMatrix, matrices_with_different_size_are_not_equal) /*матрицы с различным размером не равны
+   c=a*b;
+	EXPECT_EQ(2, c[0][0]);
+	EXPECT_EQ(9, c[0][1]);
+}
 */
-{
-	TMatrix<int> m1(2);
-	TMatrix<int> m2(3);
-	EXPECT_TRUE(m1!=m2);
-}
-
-TEST(TMatrix, can_add_matrices_with_equal_size) /*можно добавить матриц с одинаковой величины
-*/
-{
-	TMatrix<int> m1(2);
-	for (int i=0;i<2;i++)
-		for (int j=0;j<2-i;j++)
-			m1[i][j]=i;
-	TMatrix<int> m2(2);
-	for (int i=0;i<2;i++)
-		for (int j=0;j<2-i;j++)
-			m2[i][j]=i+1;
-	TMatrix<int> m3(2);
-	m3=m1+m2;
-	EXPECT_EQ(1,m3[0][0]);
-	EXPECT_EQ(1,m3[0][1]);
-	EXPECT_EQ(3,m3[1][0]);
-}
-
-TEST(TMatrix, cant_add_matrices_with_not_equal_size) /*не могу добавить матриц с размером, не равным*/
-{
-	TMatrix<int> m1(2);
-	TMatrix<int> m2(3);
-	ASSERT_ANY_THROW(m1+m2); /*утверждать любой бросок*/
-}
-
-TEST(TMatrix, can_subtract_matrices_with_equal_size) /*можно вычесть матрицы с одинакового размера*/
-{
-	TMatrix<int> m1(2);
-	for (int i=0;i<2;i++)
-		for (int j=0;j<2-i;j++)
-			m1[i][j]=i;
-	TMatrix<int> m2(2);
-	for (int i=0;i<2;i++)
-		for (int j=0;j<2-i;j++)
-			m2[i][j]=i+1;
-	TMatrix<int> m3(2);
-	m3=m2-m1;
-	for (int i=0;i<2;i++)
-		for (int j=0;j<2-i;j++)
-			EXPECT_EQ(1,m3[i][j]);
-}
-
-TEST(TMatrix, cant_subtract_matrixes_with_not_equal_size) /*косяка вычитать матрицы с размером, не равным*/
-{
-	TMatrix<int> m1(2);
-	TMatrix<int> m2(3);
-	ASSERT_ANY_THROW(m1-m2); /*утверждать любой бросок*/
-}
